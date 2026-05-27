@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔮 आज का Lucky Number</title>
+<meta name="description" content="अपना नाम लिखो और जानो आज का lucky number — अंक शास्त्र के अनुसार">
+<meta name="theme-color" content="#0a0010">
+<link rel="manifest" href="data:application/json,{%22name%22:%22Aaj%20Ka%20Lucky%20Number%22,%22short_name%22:%22Lucky%20No.%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%230a0010%22,%22theme_color%22:%220a0010%22}">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='45' r='38' fill='%23200040' stroke='%23a855f7' stroke-width='2'/><circle cx='50' cy='45' r='38' fill='url(%23g)'/><defs><radialGradient id='g' cx='38%25' cy='32%25'><stop offset='0%25' stop-color='%23ffffff' stop-opacity='0.2'/><stop offset='60%25' stop-color='%237c3aed' stop-opacity='0.4'/><stop offset='100%25' stop-color='%230a0020' stop-opacity='0.95'/></radialGradient></defs><text x='50' y='52' text-anchor='middle' font-size='28' fill='%23f0c040'>✦</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:#03020d; --deep:#0a0820;
+  --gold:#f5c842; --gold2:#ffe680; --gold3:#fff4b8;
+  --purple:#6d28d9; --violet:#a855f7; --violet2:#c084fc;
+  --glow-p:rgba(168,85,247,0.5); --glow-g:rgba(245,200,66,0.6);
+  --white:#f0eaff; --muted:#9988bb; --muted2:#7766aa;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--black); color:var(--white);
+  font-family:'Tiro Devanagari Hindi',serif;
+  min-height:100vh; overflow-x:hidden; position:relative;
+}
+body::before{
+  content:''; position:fixed; inset:0;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -10%,rgba(109,40,217,0.22) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 40% at 10% 60%,rgba(168,85,247,0.08) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 80%,rgba(245,200,66,0.07) 0%,transparent 60%);
+  pointer-events:none; z-index:0;
+}
+
+/* STARS */
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.star{position:absolute;border-radius:50%;background:white;opacity:0;animation:twinkle var(--d) var(--delay) infinite;}
+@keyframes twinkle{0%,100%{opacity:0}50%{opacity:var(--op)}}
+
+.page{position:relative;z-index:1;max-width:500px;margin:0 auto;padding:16px 16px 44px;}
+
+/* DATE-TIME BAR */
+.datetime-bar{
+  text-align:center; margin-bottom:10px;
+  padding:14px 16px 12px;
+  background:linear-gradient(135deg,rgba(109,40,217,0.18),rgba(168,85,247,0.08));
+  border:1px solid rgba(168,85,247,0.3);
+  border-radius:16px;
+  position:relative; overflow:hidden;
+}
+.datetime-bar::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(168,85,247,0.06),transparent);
+  animation:barShimmer 3s ease infinite;
+}
+@keyframes barShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+.date-main{
+  font-size:18px; font-weight:700;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  letter-spacing:0.5px; margin-bottom:4px;
+}
+.date-day{
+  font-size:13px; color:var(--violet2); letter-spacing:1px;
+  margin-bottom:6px;
+}
+.time-display{
+  font-family:'Cinzel Decorative',serif;
+  font-size:22px; font-weight:700;
+  color:var(--white);
+  letter-spacing:2px;
+  text-shadow:0 0 20px var(--glow-p);
+}
+.time-ampm{font-size:13px; color:var(--muted); margin-left:4px;}
+.date-sub{
+  font-size:12px; color:var(--muted); margin-top:5px;
+  letter-spacing:0.5px;
+}
+
+/* HEADER */
+.header{text-align:center;padding:20px 0 10px;}
+.header .symbol{
+  font-size:64px; display:block; margin-bottom:10px;
+  filter:drop-shadow(0 0 24px var(--glow-p)) drop-shadow(0 0 48px rgba(109,40,217,0.3));
+  animation:floatSymbol 3s ease-in-out infinite;
+}
+@keyframes floatSymbol{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+.header h1{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(20px,5.5vw,30px); font-weight:900;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 45%,var(--violet2) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  letter-spacing:1px; line-height:1.2; margin-bottom:12px;
+  filter:drop-shadow(0 2px 8px rgba(245,200,66,0.2));
+}
+.tagline{font-size:14px;color:var(--muted);line-height:1.8;font-style:italic;padding:0 8px;}
+
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(168,85,247,0.5),transparent);}
+.divider span{color:var(--gold);font-size:18px;filter:drop-shadow(0 0 6px var(--glow-g));}
+
+/* INPUT */
+.input-section{margin-bottom:28px;}
+.input-label{
+  display:block;text-align:center;
+  font-size:14px;color:var(--muted2);margin-bottom:12px;
+  letter-spacing:0.5px;
+}
+.naam-input{
+  width:100%;padding:16px 20px;
+  background:rgba(109,40,217,0.12);
+  border:1.5px solid rgba(168,85,247,0.4);
+  border-radius:14px; color:var(--white); font-size:18px;
+  font-family:'Tiro Devanagari Hindi',serif;
+  outline:none; transition:all 0.35s; text-align:center;
+  letter-spacing:0.5px;
+}
+.naam-input::placeholder{color:rgba(153,136,187,0.45);}
+.naam-input:focus{
+  border-color:var(--violet);
+  box-shadow:0 0 28px var(--glow-p),inset 0 0 16px rgba(168,85,247,0.1);
+  background:rgba(109,40,217,0.18);
+  transform:scale(1.01);
+}
+.start-btn{
+  display:block;width:100%;margin-top:16px;
+  padding:18px;border:none;border-radius:14px;cursor:pointer;
+  font-family:'Tiro Devanagari Hindi',serif;
+  font-size:19px;font-weight:700;letter-spacing:0.5px;
+  background:linear-gradient(135deg,#5b21b6,#7c3aed,#a855f7,#7c3aed,#5b21b6);
+  background-size:300% 300%; color:#fff; transition:all 0.35s;
+  box-shadow:0 6px 30px rgba(124,58,237,0.5), 0 0 0 0 rgba(168,85,247,0);
+  animation:gradShift 4s ease infinite;
+  position:relative; overflow:hidden;
+}
+.start-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,0.1) 50%,transparent 70%);
+  transform:translateX(-100%);
+  transition:transform 0.5s;
+}
+.start-btn:hover::after{transform:translateX(100%);}
+@keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(124,58,237,0.65),0 0 0 2px rgba(168,85,247,0.3);}
+.start-btn:active{transform:translateY(0);}
+.start-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;animation:none;}
+
+/* ORBS */
+.orbs-section{display:flex;flex-direction:column;gap:20px;margin-bottom:28px;}
+.orb-row{display:flex;align-items:center;gap:16px;opacity:0.25;transition:opacity 0.6s, transform 0.6s;transform:translateX(-10px);}
+.orb-row.active{opacity:1;transform:translateX(0);}
+
+.orb-label-left{
+  flex:0 0 76px;text-align:right;
+  font-size:11px;color:var(--muted);line-height:1.5;
+}
+.orb-label-left strong{display:block;font-size:15px;color:var(--violet2);font-weight:700;margin-bottom:2px;}
+
+/* Crystal */
+.crystal-wrap{flex:0 0 100px;height:100px;position:relative;}
+.crystal-hint{
+  position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);
+  font-size:10px;color:var(--gold);white-space:nowrap;
+  opacity:0;transition:opacity 0.4s;
+  letter-spacing:0.5px;
+  text-shadow:0 0 8px var(--glow-g);
+}
+.orb-row.active .crystal-hint{opacity:1;animation:hintPulse 1.2s ease infinite;}
+@keyframes hintPulse{0%,100%{opacity:0.6}50%{opacity:1}}
+
+.crystal{
+  width:100px;height:100px;border-radius:50%;
+  position:relative;cursor:pointer;
+  background:radial-gradient(circle at 35% 28%,
+    rgba(255,255,255,0.18) 0%,
+    rgba(124,58,237,0.35) 35%,
+    rgba(10,5,30,0.92) 100%);
+  border:2px solid rgba(168,85,247,0.45);
+  box-shadow:
+    0 0 25px rgba(124,58,237,0.35),
+    0 0 50px rgba(124,58,237,0.12),
+    inset 0 0 25px rgba(124,58,237,0.18),
+    inset 3px 3px 8px rgba(255,255,255,0.08);
+  overflow:hidden;transition:all 0.35s;
+  display:flex;align-items:center;justify-content:center;
+}
+.crystal::before{
+  content:'';position:absolute;top:14px;left:17px;
+  width:24px;height:15px;border-radius:50%;
+  background:rgba(255,255,255,0.14);transform:rotate(-30deg);pointer-events:none;
+}
+.crystal:hover{
+  box-shadow:0 0 40px rgba(168,85,247,0.55),0 0 80px rgba(168,85,247,0.2),inset 0 0 25px rgba(168,85,247,0.2);
+  border-color:var(--violet);
+  transform:scale(1.05);
+}
+.crystal.spinning{
+  box-shadow:0 0 50px rgba(168,85,247,0.8),0 0 100px rgba(168,85,247,0.35),inset 0 0 35px rgba(168,85,247,0.25);
+  border-color:var(--violet2);
+  animation:crystalPulse 0.12s ease infinite;
+}
+@keyframes crystalPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.crystal.locked{
+  border-color:var(--gold);
+  box-shadow:0 0 40px var(--glow-g),0 0 80px rgba(245,200,66,0.25),inset 0 0 25px rgba(245,200,66,0.12);
+  animation:lockedPulse 2s ease infinite;
+  cursor:default;
+}
+@keyframes lockedPulse{0%,100%{box-shadow:0 0 40px var(--glow-g),0 0 80px rgba(245,200,66,0.25),inset 0 0 25px rgba(245,200,66,0.12)}50%{box-shadow:0 0 55px rgba(245,200,66,0.8),0 0 110px rgba(245,200,66,0.3),inset 0 0 30px rgba(245,200,66,0.18)}}
+
+.glitch-number{
+  font-family:'Cinzel Decorative',serif;font-size:36px;font-weight:900;
+  color:var(--violet2);z-index:2;
+  text-shadow:0 0 15px var(--glow-p),0 0 30px rgba(168,85,247,0.4);
+}
+.crystal.locked .glitch-number{
+  color:var(--gold);
+  text-shadow:0 0 20px var(--glow-g),0 0 40px rgba(245,200,66,0.4);
+  animation:goldPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+@keyframes goldPop{0%{transform:scale(2);opacity:0}60%{transform:scale(0.9)}100%{transform:scale(1);opacity:1}}
+.idle-emoji{font-size:30px;filter:opacity(0.45);}
+
+/* Result box */
+.result-box{
+  flex:1;min-height:70px;border-radius:14px;
+  border:1.5px solid rgba(168,85,247,0.2);
+  background:rgba(10,8,32,0.7);
+  display:flex;align-items:center;justify-content:center;
+  padding:12px;transition:all 0.5s;
+}
+.result-box.revealed{
+  border-color:var(--gold);
+  background:rgba(245,200,66,0.07);
+  box-shadow:0 0 25px rgba(245,200,66,0.18),inset 0 0 15px rgba(245,200,66,0.05);
+}
+.result-number{
+  font-family:'Cinzel Decorative',serif;font-size:32px;font-weight:900;
+  background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  opacity:0;transform:scale(0.3) rotate(-10deg);
+  transition:all 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.result-box.revealed .result-number{opacity:1;transform:scale(1) rotate(0deg);}
+.result-label{
+  font-size:11px;color:var(--muted);text-align:center;
+  letter-spacing:0.5px;display:block;margin-top:3px;
+  opacity:0;transition:opacity 0.4s 0.3s;
+}
+.result-box.revealed .result-label{opacity:1;}
+.result-inner{text-align:center;}
+
+/* GRAND REVEAL */
+.grand-reveal{
+  margin-bottom:28px;text-align:center;
+  opacity:0;transform:translateY(24px) scale(0.97);
+  transition:all 0.7s cubic-bezier(0.175,0.885,0.32,1.275);
+  pointer-events:none;
+}
+.grand-reveal.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+.grand-box{
+  border:1.5px solid var(--gold);border-radius:20px;padding:28px 20px;
+  background:radial-gradient(ellipse at center top,rgba(245,200,66,0.1) 0%,rgba(10,8,32,0.9) 70%);
+  box-shadow:0 0 50px rgba(245,200,66,0.15),0 0 100px rgba(245,200,66,0.06),inset 0 1px 0 rgba(245,200,66,0.2);
+  position:relative;overflow:hidden;
+}
+.grand-box::before{
+  content:'✦ ✦ ✦';position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  color:var(--gold);font-size:11px;letter-spacing:8px;opacity:0.35;
+}
+.grand-box::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 40%,rgba(245,200,66,0.03) 50%,transparent 60%);
+  animation:grandShimmer 3s ease infinite;
+}
+@keyframes grandShimmer{0%{transform:translateX(-100%) rotate(45deg)}100%{transform:translateX(200%) rotate(45deg)}}
+
+.grand-title{font-size:13px;color:var(--muted);letter-spacing:1px;margin-bottom:14px;margin-top:8px;}
+.grand-numbers{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(44px,11vw,58px);font-weight:900;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 45%,var(--gold3) 70%,var(--gold2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:10px;line-height:1;margin-bottom:8px;
+  animation:shimmer 2.5s ease infinite;background-size:200%;
+  filter:drop-shadow(0 2px 12px rgba(245,200,66,0.3));
+}
+@keyframes shimmer{0%{background-position:0%}50%{background-position:100%}100%{background-position:0%}}
+.grand-naam{font-size:14px;color:var(--muted);font-style:italic;margin-bottom:18px;}
+.grand-score-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+.score-chip{
+  background:rgba(109,40,217,0.25);
+  border:1px solid rgba(168,85,247,0.35);
+  border-radius:20px;padding:6px 16px;
+  font-size:12px;color:var(--violet2);
+  box-shadow:0 2px 10px rgba(109,40,217,0.2);
+}
+
+/* GYAAN */
+.gyaan-section{opacity:0;transform:translateY(20px);transition:all 0.7s ease 0.4s;margin-bottom:30px;}
+.gyaan-section.show{opacity:1;transform:translateY(0);}
+.gyaan-box{
+  border:1.5px solid rgba(168,85,247,0.3);border-radius:18px;padding:22px 18px;
+  background:linear-gradient(135deg,rgba(109,40,217,0.1),rgba(10,8,32,0.8));
+  box-shadow:inset 0 1px 0 rgba(168,85,247,0.15);
+}
+.gyaan-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.gyaan-header span{font-size:24px;}
+.gyaan-header h3{font-family:'Tiro Devanagari Hindi',serif;font-size:16px;color:var(--violet2);font-weight:700;}
+.gyaan-text{font-size:15px;line-height:1.9;color:#d4cbe8;}
+.gyaan-text strong{color:var(--gold);}
+
+/* ARTICLE CARDS */
+.links-section{margin-bottom:30px;}
+.links-title{
+  text-align:center;font-size:13px;color:var(--muted);
+  letter-spacing:2px;margin-bottom:16px;
+}
+.link-card{
+  display:flex;text-decoration:none;
+  margin-bottom:14px;border-radius:14px;overflow:hidden;
+  border:1.5px solid rgba(168,85,247,0.2);
+  background:rgba(10,8,32,0.8);
+  transition:all 0.35s;min-height:96px;
+}
+.link-card:hover{
+  border-color:rgba(245,200,66,0.45);
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.5),0 0 20px rgba(245,200,66,0.08);
+}
+.card-thumb-wrap{flex:0 0 120px;position:relative;overflow:hidden;}
+.card-thumb{width:100%;height:100%;object-fit:cover;display:block;}
+.card-thumb-fallback{
+  width:100%;height:100%;min-height:96px;
+  display:flex;align-items:center;justify-content:center;font-size:36px;
+  background:linear-gradient(135deg,rgba(109,40,217,0.3),rgba(10,5,30,0.95));
+}
+.card-body{flex:1;padding:14px 16px;display:flex;flex-direction:column;justify-content:center;gap:6px;}
+.card-category{font-size:11px;letter-spacing:1px;color:var(--violet2);}
+.card-title{font-size:14px;color:var(--white);line-height:1.5;font-weight:600;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.card-cta{font-size:12px;color:var(--gold);display:flex;align-items:center;gap:4px;margin-top:2px;}
+.card-cta::after{content:'→';}
+
+/* FOOTER */
+.footer{text-align:center;padding-top:10px;border-top:1px solid rgba(168,85,247,0.15);}
+.footer p{font-size:12px;color:rgba(153,136,187,0.45);line-height:1.9;}
+
+/* DISCLAIMER */
+.disclaimer{text-align:center;margin-top:14px;padding-bottom:8px;font-size:8px;color:rgba(100,90,120,0.28);line-height:1.6;}
+
+/* PARTICLES */
+.particle{position:fixed;pointer-events:none;border-radius:50%;z-index:999;animation:particleFly var(--pd) ease-out forwards;}
+@keyframes particleFly{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--px),var(--py)) scale(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="page">
+
+  <!-- DATE-TIME BAR -->
+  <div class="datetime-bar">
+    <div class="date-main" id="dateMain"></div>
+    <div class="date-day" id="dateDay"></div>
+    <div class="time-display" id="timeDisplay"></div>
+    <div class="date-sub">✦ आज आपका शुभ नंबर ✦</div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <span class="symbol">🔮</span>
+    <h1>Aaj Ka Lucky Number</h1>
+    <p class="tagline">
+      अंक शास्त्र में हर नाम में एक शक्ति होती है —<br>
+      और हर दिन वो शक्ति नया रास्ता दिखाती है।
+    </p>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- INPUT -->
+  <div class="input-section">
+    <label class="input-label">✨ अपना नाम लिखो ✨</label>
+    <input class="naam-input" type="text" id="naamInput"
+      placeholder="जैसे: राहुल, प्रिया, नेहा..."
+      maxlength="40" autocomplete="off"/>
+    <button class="start-btn" id="startBtn" onclick="startJourney()">
+      🔮 जादू शुरू करो 🔮
+    </button>
+  </div>
+
+  <!-- ORBS -->
+  <div class="orbs-section">
+
+    <div class="orb-row" id="row1">
+      <div class="orb-label-left">
+        <strong>आत्मा</strong>अंदर की शक्ति
+      </div>
+      <div class="crystal-wrap">
+        <div class="crystal" id="crystal1">
+          <span class="idle-emoji" id="idle1">⭐</span>
+          <span class="glitch-number" id="gnum1" style="display:none"></span>
+        </div>
+        <div class="crystal-hint" id="hint1">👆 दबाओ</div>
+      </div>
+      <div class="result-box" id="rbox1">
+        <div class="result-inner">
+          <div class="result-number" id="rnum1"></div>
+          <span class="result-label">आत्मा अंक</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="orb-row" id="row2">
+      <div class="orb-label-left">
+        <strong>कर्म</strong>कर्म का फल
+      </div>
+      <div class="crystal-wrap">
+        <div class="crystal" id="crystal2">
+          <span class="idle-emoji" id="idle2">🌙</span>
+          <span class="glitch-number" id="gnum2" style="display:none"></span>
+        </div>
+        <div class="crystal-hint" id="hint2">👆 दबाओ</div>
+      </div>
+      <div class="result-box" id="rbox2">
+        <div class="result-inner">
+          <div class="result-number" id="rnum2"></div>
+          <span class="result-label">कर्म अंक</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="orb-row" id="row3">
+      <div class="orb-label-left">
+        <strong>भाग्य</strong>आज का योग
+      </div>
+      <div class="crystal-wrap">
+        <div class="crystal" id="crystal3">
+          <span class="idle-emoji" id="idle3">☀️</span>
+          <span class="glitch-number" id="gnum3" style="display:none"></span>
+        </div>
+        <div class="crystal-hint" id="hint3">👆 दबाओ</div>
+      </div>
+      <div class="result-box" id="rbox3">
+        <div class="result-inner">
+          <div class="result-number" id="rnum3"></div>
+          <span class="result-label">भाग्य अंक</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GRAND REVEAL -->
+  <div class="grand-reveal" id="grandReveal">
+    <div class="grand-box">
+      <p class="grand-title">🌟 आपका आज का Lucky Number 🌟</p>
+      <div class="grand-numbers" id="grandNumbers">---</div>
+      <p class="grand-naam" id="grandNaam"></p>
+      <div class="grand-score-row">
+        <span class="score-chip" id="chip1">आत्मा ✦</span>
+        <span class="score-chip" id="chip2">कर्म ✦</span>
+        <span class="score-chip" id="chip3">भाग्य ✦</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GYAAN -->
+  <div class="gyaan-section" id="gyaanSection">
+    <div class="gyaan-box">
+      <div class="gyaan-header">
+        <span>📜</span>
+        <h3>आज का अंक शास्त्र संदेश</h3>
+      </div>
+      <p class="gyaan-text" id="gyaanText"></p>
+    </div>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- ARTICLE CARDS -->
+  <div class="links-section">
+    <p class="links-title">✦ और भी जानें ✦</p>
+
+    <a class="link-card" href="https://www.vhoriginal.com/2026/04/geeta-ke-anusar-karma-kya-hai-students-youth.html" target="_blank" rel="noopener">
+      <div class="card-thumb-wrap">
+        <div class="card-thumb-fallback">📖</div>
+      </div>
+      <div class="card-body">
+        <span class="card-category">अध्यात्म</span>
+        <div class="card-title">गीता के अनुसार कर्म क्या है? Students और Youth के लिए</div>
+        <span class="card-cta">पढ़ें</span>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://www.vhoriginal.com/2026/04/manusmriti-shlokas-meaning-in-hindi.html" target="_blank" rel="noopener">
+      <div class="card-thumb-wrap">
+        <div class="card-thumb-fallback">🕉️</div>
+      </div>
+      <div class="card-body">
+        <span class="card-category">अध्यात्म</span>
+        <div class="card-title">मनुस्मृति के प्रमुख श्लोक और उनका हिंदी अर्थ</div>
+        <span class="card-cta">पढ़ें</span>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://www.vhoriginal.com/2026/05/phone-me-sona-hota-hai-kya-gold-uses-in-hindi.html" target="_blank" rel="noopener">
+      <div class="card-thumb-wrap">
+        <div class="card-thumb-fallback">📱</div>
+      </div>
+      <div class="card-body">
+        <span class="card-category">टेक्नोलॉजी</span>
+        <div class="card-title">Phone में सोना होता है क्या? Gold Uses in Mobile Hindi में</div>
+        <span class="card-cta">पढ़ें</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="footer">
+    <p>
+      🔮 अंक शास्त्र और नाम की शक्ति<br>
+      हर दिन नया योग, हर नाम की अपनी कहानी<br>
+      <strong style="color:rgba(153,136,187,0.5)">vhoriginal.com</strong>
+    </p>
+  </div>
+
+  <p class="disclaimer">
+    यह results अंक शास्त्र पर आधारित हैं जो मनोरंजन के लिए हैं। परिणाम सही या गलत दोनों हो सकते हैं। किसी भी निर्णय के लिए इस पर निर्भर न रहें।
+  </p>
+
+</div>
+
+<script>
+// ── Stars ──
+(function(){
+  const s=document.getElementById('stars');
+  for(let i=0;i<100;i++){
+    const el=document.createElement('div');
+    el.className='star';
+    const size=Math.random()*3+0.5;
+    el.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*5}s;--delay:${Math.random()*6}s;--op:${0.15+Math.random()*0.8};`;
+    s.appendChild(el);
+  }
+})();
+
+// ── Live Clock ──
+const months=['जनवरी','फरवरी','मार्च','अप्रैल','मई','जून','जुलाई','अगस्त','सितंबर','अक्टूबर','नवंबर','दिसंबर'];
+const days=['रविवार','सोमवार','मंगलवार','बुधवार','गुरुवार','शुक्रवार','शनिवार'];
+
+function updateClock(){
+  const d=new Date();
+  document.getElementById('dateMain').textContent=d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear();
+  document.getElementById('dateDay').textContent=days[d.getDay()];
+  let h=d.getHours(), m=d.getMinutes(), s=d.getSeconds();
+  const ampm=h>=12?'PM':'AM';
+  h=h%12||12;
+  const pad=n=>String(n).padStart(2,'0');
+  document.getElementById('timeDisplay').innerHTML=
+    pad(h)+':'+pad(m)+':'+pad(s)+'<span class="time-ampm"> '+ampm+'</span>';
+}
+updateClock();
+setInterval(updateClock,1000);
+
+// ── Numerology ──
+function calcNumbers(naam,date){
+  let s1=0;
+  for(let i=0;i<naam.length;i++) s1+=naam.charCodeAt(i);
+  let d1=((s1-1)%9)+1;
+  let s2=0;
+  for(let i=0;i<naam.length;i++) s2+=(naam.charCodeAt(i)*(i+1));
+  let d2=((s2-1)%9)+1;
+  const dd=date.getDate(),mm=date.getMonth()+1,yy=date.getFullYear();
+  let s3=s1+dd+mm+(yy%100);
+  let d3=((s3-1)%9)+1;
+  return [d1,d2,d3];
+}
+
+// ── Gyaan ──
+const gyaanData={
+  "1":{title:"सूर्य का अंक",msg:"आज का दिन <strong>नेतृत्व और फैसले</strong> का है। जो भी काम शुरू करो उसमें पूरी ताकत लगाओ। सूर्य की तरह चमकने का यह सही वक्त है — आज कोई रोक नहीं सकता।"},
+  "2":{title:"चंद्र का अंक",msg:"आज <strong>रिश्तों और भावनाओं</strong> को पहली जगह दो। कोई खास बात करनी हो तो आज करो — दिल की सुनाई देगी। चंद्र की तरह शीतलता आज का सबसे बड़ा हथियार है।"},
+  "3":{title:"गुरु का अंक",msg:"<strong>Creativity और बातचीत</strong> आज तुम्हारे पास है। कोई नया idea हो तो share करो — लोग सुनेंगे। गुरु ग्रह आज तुम्हारी जुबान और कलम दोनों को तेज़ करता है।"},
+  "4":{title:"राहु का अंक",msg:"आज <strong>मेहनत और discipline</strong> से काम लेना होगा। कोई shortcut नहीं — सीधा रास्ता ही सफलता देगा। राहु का यह अंक आज उन्हें अच्छा देता है जो बिना रुके काम करते हैं।"},
+  "5":{title:"बुध का अंक",msg:"<strong>बदलाव और नई शुरुआत</strong> का दिन है आज। कोई नया कदम उठाने की सोच रहे हो तो आज ही सही वक्त है। बुध का अंक आज तुम्हारी सोच को तेज़ और जुबान को चालाक बनाता है।"},
+  "6":{title:"शुक्र का अंक",msg:"आज <strong>प्रेम, सुकून और खुशी</strong> तुम्हारे साथ है। घर में कोई खुशी ला सकते हो। खरीदारी या creative काम के लिए शुक्र का यह अंक आज बहुत शुभ है।"},
+  "7":{title:"केतु का अंक",msg:"आज का दिन <strong>आत्म-मंथन और ज्ञान</strong> का है। कोई नया सीखने का मौका मत छोड़ो। केतु आज तुम्हें अंदर की दुनिया की तरफ ले जाता है — एकांत में कुछ नया मिलेगा।"},
+  "8":{title:"शनि का अंक",msg:"<strong>कर्म और न्याय</strong> आज काम करेगा। जो बोया है वो काटने का दिन आ सकता है। शनि का अंक आज उन्हें मुबारक जो ईमानदारी से काम करते हैं — सफलता देर से आती है पर पक्की होती है।"},
+  "9":{title:"मंगल का अंक",msg:"आज <strong>शक्ति और साहस</strong> की जरूरत है — और है भी! कोई challenge face करना हो तो आज से बेहतर दिन नहीं। मंगल का यह अंक आज उन लोगों के लिए है जो डरने की जगह लड़ना जानते हैं।"}
+};
+
+// ── State ──
+let numbers=[],currentStep=0,isRunning=false,naam='';
+
+function startJourney(){
+  naam=document.getElementById('naamInput').value.trim();
+  if(!naam){shakeInput();return;}
+  numbers=calcNumbers(naam.toLowerCase(),new Date());
+  currentStep=0;isRunning=false;
+  for(let i=1;i<=3;i++){
+    document.getElementById('row'+i).classList.remove('active');
+    document.getElementById('crystal'+i).className='crystal';
+    document.getElementById('idle'+i).style.display='block';
+    document.getElementById('gnum'+i).style.display='none';
+    document.getElementById('rbox'+i).classList.remove('revealed');
+    document.getElementById('rnum'+i).textContent='';
+  }
+  document.getElementById('grandReveal').classList.remove('show');
+  document.getElementById('gyaanSection').classList.remove('show');
+  document.getElementById('startBtn').disabled=true;
+  setTimeout(()=>activateStep(0),500);
+}
+
+function activateStep(idx){
+  const row=document.getElementById('row'+(idx+1));
+  row.classList.add('active');
+  setTimeout(()=>row.scrollIntoView({behavior:'smooth',block:'center'}),100);
+  const crystal=document.getElementById('crystal'+(idx+1));
+  crystal.onclick=()=>{
+    if(isRunning)return;
+    isRunning=true;
+    document.getElementById('hint'+(idx+1)).style.opacity='0';
+    crystal.onclick=null;
+    spinCrystal(idx);
+  };
+}
+
+function spinCrystal(idx){
+  const crystal=document.getElementById('crystal'+(idx+1));
+  document.getElementById('idle'+(idx+1)).style.display='none';
+  const gnumEl=document.getElementById('gnum'+(idx+1));
+  gnumEl.style.display='block';gnumEl.textContent='?';
+  crystal.classList.add('spinning');
+  let count=0;
+  const target=numbers[idx];
+  const interval=setInterval(()=>{
+    gnumEl.textContent=Math.floor(Math.random()*10);
+    count++;
+    if(count>=28){clearInterval(interval);lockCrystal(idx,target);}
+  },55);
+}
+
+function lockCrystal(idx,num){
+  const crystal=document.getElementById('crystal'+(idx+1));
+  const gnumEl=document.getElementById('gnum'+(idx+1));
+  crystal.classList.remove('spinning');crystal.classList.add('locked');
+  gnumEl.textContent=num;
+  spawnParticles(crystal);
+  setTimeout(()=>{
+    document.getElementById('rnum'+(idx+1)).textContent=num;
+    document.getElementById('rbox'+(idx+1)).classList.add('revealed');
+  },250);
+  setTimeout(()=>{
+    isRunning=false;
+    if(idx<2){currentStep=idx+1;activateStep(currentStep);}
+    else showFinale();
+  },800);
+}
+
+function showFinale(){
+  document.getElementById('grandNumbers').textContent=numbers.join('  ');
+  document.getElementById('grandNaam').textContent='"'+naam+'" के लिए आज का शुभ योग';
+  document.getElementById('chip1').textContent='आत्मा: '+numbers[0];
+  document.getElementById('chip2').textContent='कर्म: '+numbers[1];
+  document.getElementById('chip3').textContent='भाग्य: '+numbers[2];
+  const gr=document.getElementById('grandReveal');
+  gr.classList.add('show');
+  const g=gyaanData[String(numbers[2])];
+  document.getElementById('gyaanText').innerHTML='<strong>'+g.title+'</strong><br><br>'+g.msg;
+  setTimeout(()=>document.getElementById('gyaanSection').classList.add('show'),500);
+  setTimeout(()=>{
+    const btn=document.getElementById('startBtn');
+    btn.disabled=false;
+    btn.textContent='🔄 दोबारा देखो';
+  },900);
+  setTimeout(()=>gr.scrollIntoView({behavior:'smooth',block:'center'}),200);
+}
+
+// ── Particles ──
+function spawnParticles(el){
+  const rect=el.getBoundingClientRect();
+  const cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
+  const colors=['#f5c842','#a855f7','#ffffff','#ffe680','#c084fc'];
+  for(let i=0;i<18;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const size=2+Math.random()*6,angle=Math.random()*360,dist=50+Math.random()*100;
+    p.style.cssText=`left:${cx}px;top:${cy}px;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};--px:${Math.cos(angle*Math.PI/180)*dist}px;--py:${Math.sin(angle*Math.PI/180)*dist}px;--pd:${0.5+Math.random()*0.6}s;`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),800);
+  }
+}
+
+function shakeInput(){
+  const inp=document.getElementById('naamInput');
+  inp.style.animation='shake 0.4s ease';
+  inp.style.borderColor='#f87171';
+  inp.placeholder='पहले नाम तो लिखो! 😄';
+  setTimeout(()=>{inp.style.animation='';inp.style.borderColor='';inp.placeholder='जैसे: राहुल, प्रिया, नेहा...';},1500);
+}
+
+if('serviceWorker' in navigator){
+  const sw=`const CACHE='lucky-v2';self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.add('/'))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
+  const blob=new Blob([sw],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+}
+</script>
+</body>
+</html>
